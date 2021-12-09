@@ -4,7 +4,8 @@
 </p>
 <p align="center">利用 github api 实现的一个存储附件（图床）的 wordpress 插件</p>
 
-
+## 修改版
+修改了一些在PHP 8.1 中的语法错误，以及默认开启，在WordPress媒体库中删除文件，也会同步在github仓库上删除。
 ## 前言
 
 本插件核心功能使用了 GitHub API
