@@ -327,7 +327,7 @@ function github_delete_remote_file ($file)
 	try
 	{
 		// 删除文件
-		GithubApi::delFile($github_bucket, $github_repo, $del_file_path);
+		GithubApi::delFile($github_owner, $github_repo, $del_file_path);
 	}
 	catch(Exception $ex)
 	{
@@ -357,15 +357,16 @@ if(get_option('upload_path') == '.')
 
 function github_read_dir_queue ($dir)
 {
+    $dd = array();
 	if(isset($dir))
 	{
 		$files = array();
 		$queue = array(
 			$dir
 		);
-		while($data = each($queue))
+		foreach ($queue as $key => $data)
 		{
-			$path = $data['value'];
+			$path = $data;
 			if(is_dir($path) && $handle = opendir($path))
 			{
 				while($file = readdir($handle))
@@ -396,11 +397,7 @@ function github_read_dir_queue ($dir)
 				$dd[$i]['x'] = '/' . get_option('upload_path') . explode(get_option('upload_path'), $v)[1];
 			}
 		}
-	}
-	else
-	{
-		$dd = '';
-	}
+	} 
 	return $dd;
 }
 
@@ -409,7 +406,7 @@ function github_plugin_action_links ($links, $file)
 {
 	if($file == plugin_basename(dirname(__FILE__) . '/wordpress-gos.php'))
 	{
-		$links[] = '<a href="options-general.php?page=' . GITHUB_SYNC_BASEFOLDER . '/wordpress-gos.php">' . 设置 . '</a>';
+		$links[] = '<a href="options-general.php?page=' . GITHUB_SYNC_BASEFOLDER . '/wordpress-gos.php">设置</a>';
 	}
 	return $links;
 }
@@ -454,7 +451,7 @@ function github_setting_page ()
 		
 		$synv = github_read_dir_queue(get_home_path() . get_option('upload_path'));
 		$i = 0;
-		foreach($synv as $k)
+		foreach($synv as $key => $k)
 		{
 			// 判断文件是否存在
 			$sha = GithubApi::getSha($github_owner, $github_repo, $k['x']);
